@@ -3,6 +3,7 @@ import express, {Request, Response} from 'express';
 import cors from 'cors';
 import { createServer } from 'node:http';
 import clientRouter from './routes/clients';
+import appointmentRouter from './routes/appointments';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use('/clients', clientRouter);
+app.use('/appointments', appointmentRouter);
 
 const server  = createServer(app);
 

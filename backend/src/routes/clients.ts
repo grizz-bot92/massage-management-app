@@ -20,7 +20,6 @@ clientRouter.post('/', async (req:Request, res:Response) => {
   const { first_name, last_name, status } = req.body;
   const client = await db.insert(clientSchema).values([{ first_name, last_name, status }]).returning();
   res.json(client);
-
 });
 
 clientRouter.put('/:id', async(req:Request, res:Response) => {
