@@ -6,6 +6,7 @@ import clientRouter from './routes/clients';
 import appointmentRouter from './routes/appointments';
 import serviceRouter from './routes/services';
 import staffRouter from './routes/staff';
+import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
 
@@ -17,7 +18,8 @@ app.use(cors());
 app.use('/clients', clientRouter);
 app.use('/appointments', appointmentRouter);
 app.use('/services', serviceRouter);
-app.use('/staff', staffRouter)
+app.use('/staff', staffRouter);
+app.use(errorHandler);
 
 const server  = createServer(app);
 

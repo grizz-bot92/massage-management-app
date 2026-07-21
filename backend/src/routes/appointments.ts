@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import {db} from '../dataBase/db';
+import { db } from '../dataBase/db';
 import { eq } from 'drizzle-orm';
 import { appointment as appointmentSchema } from '../dataBase/schema';
 
