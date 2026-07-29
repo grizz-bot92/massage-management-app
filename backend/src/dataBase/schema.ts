@@ -9,6 +9,7 @@ export const client = pgTable('client', {
 
 export const service = pgTable('service', {
   id: uuid('id').primaryKey().defaultRandom(),
+  service_key: varchar('service_key').unique(),
   treatment: varchar('treatment'),
   price: decimal(),
   duration: integer()

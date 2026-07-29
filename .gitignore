@@ -4,3 +4,5 @@ data/
 scripts/
 *.csv
 dist
+venv
+nameMapping.json
