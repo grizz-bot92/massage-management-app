@@ -2,6 +2,7 @@ import express, {Router, Response, Request} from 'express';
 import { db } from '../dataBase/db';
 import { eq } from 'drizzle-orm';
 import { service as serviceSchema } from '../dataBase/schema';
+import authenticate from '../middleware/auth';
 
 const serviceRouter: Router = express.Router();
 
@@ -17,13 +18,13 @@ serviceRouter.get('/:id', async(req:Request, res:Response) => {
   res.json(service);
 })
 
-serviceRouter.post('/', async(req:Request, res:Response) => {
+serviceRouter.post('/',  async(req:Request, res:Response) => {
   const { treatment, price, duration } = req.body;
   const service  = await db.insert(serviceSchema).values([{ treatment, duration, price }]).returning();
   res.json(service);
 });
 
-serviceRouter.put('/:id', async(req:Request, res:Response) => {
+serviceRouter.put('/:id',  async(req:Request, res:Response) => {
   const { id } = req.params;
   const { treatment, price, duration } = req.body;
   const service = await db.update(serviceSchema).set({ treatment, price, duration }).where(eq(serviceSchema.id, id)).returning();

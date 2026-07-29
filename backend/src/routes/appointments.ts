@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { eq } from 'drizzle-orm';
 import { appointment as appointmentSchema } from '../dataBase/schema';
+import authenticate from '../middleware/auth';
 
 const appointmentRouter: Router = express.Router();
 
@@ -22,7 +23,7 @@ appointmentRouter.post('/', async (req:Request, res:Response) => {
   res.json(appointment);
 });
 
-appointmentRouter.put('/:id', async(req:Request, res:Response) => {
+appointmentRouter.put('/:id',  async(req:Request, res:Response) => {
   const { id } = req.params;
   const { client_id, service_id, staff_id, appointment_date, status } = req.body;
   const appointment = await db.update(appointmentSchema).set({ client_id, service_id, staff_id, appointment_date, status }).where(eq(appointmentSchema.id, id)).returning();

@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { eq } from 'drizzle-orm';
 import { client as clientSchema } from '../dataBase/schema';
+import authenticate from '../middleware/auth';
 
 const clientRouter: Router = express.Router();
 
@@ -16,13 +17,13 @@ clientRouter.get('/:id', async(req:Request, res:Response) => {
   res.json(user);
 })
 
-clientRouter.post('/', async (req:Request, res:Response) => {
+clientRouter.post('/',  async (req:Request, res:Response) => {
   const { first_name, last_name, status } = req.body;
   const client = await db.insert(clientSchema).values([{ first_name, last_name, status }]).returning();
   res.json(client);
 });
 
-clientRouter.put('/:id', async(req:Request, res:Response) => {
+clientRouter.put('/:id',  async(req:Request, res:Response) => {
   const { id } = req.params;
   const { first_name, last_name, status } = req.body;
   const client = await db.update(clientSchema).set({ first_name, last_name, status }).where(eq(clientSchema.id, id)).returning();

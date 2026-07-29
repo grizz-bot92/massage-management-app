@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/grizz-bot92/massage-management-app#readme",
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
+    "@types/papaparse": "^5.5.2",
     "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
     "ts-node": "^10.9.2",
@@ -38,6 +40,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.6.0",
     "jsonwebtoken": "^9.0.3",
+    "papaparse": "^5.5.4",
     "pg": "^8.22.0"
   }
 }
