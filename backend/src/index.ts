@@ -6,6 +6,7 @@ import clientRouter from './routes/clients';
 import appointmentRouter from './routes/appointments';
 import serviceRouter from './routes/services';
 import staffRouter from './routes/staff';
+import analyticsRouter from './routes/analytics';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use('/clients', clientRouter);
 app.use('/appointments', appointmentRouter);
 app.use('/services', serviceRouter);
 app.use('/staff', staffRouter);
+app.use('/analytics', analyticsRouter)
 app.use(errorHandler);
 
 const server  = createServer(app);
