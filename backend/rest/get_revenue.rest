@@ -1,1 +1,1 @@
-GET http://localhost:8080/analytics/no_show_rate
+GET http://localhost:8080/analytics/top_cancelled_client

@@ -1,4 +1,5 @@
-import { appointment } from './../dataBase/schema';
+import { client } from './../dataBase/schema';
+import { CLIENT_RENEG_WINDOW } from 'node:tls';
 import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { appointment, client, service, staff } from '../dataBase/schema';
@@ -43,9 +44,31 @@ analyticsRouter.get('/no_show_rate', async(req:Request, res:Response) => {
   res.json(result.rows[0]);
 });
 
-analyticsRouter.get('/top_visits', (req:Request, res:Response) => {
-  
-})
+analyticsRouter.get('/top_visits', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select c.first_name as name, count(a.status) as count_status
+    from client c
+    left join appointment a on c.id = a.client_id
+    where a.status = 'completed'
+    group by c.first_name
+    order by count(a.id) desc limit 10
+  `);
+
+  res.json(result.rows);
+});
+
+analyticsRouter.get('/top_cancelled_client', async(req:Request, res:Response) =>{
+  const result = await db.execute(sql`
+    select c.first_name as name, count(a.status) as count_status
+    from client c
+    left join appointment a on c.id = a.client_id 
+    where (a.status = 'cancelled' or a.status = 'no_show')
+    group by c.first_name
+    order by count(a.id) desc limit 10 
+  `);
+
+  res.json(result.rows)
+});
 
 
 
