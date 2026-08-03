@@ -1,1 +1,1 @@
-GET http://localhost:8080/analytics/top_cancelled_client
+GET http://localhost:8080/analytics/revenue_lost

@@ -1,9 +1,7 @@
-import { client } from './../dataBase/schema';
-import { CLIENT_RENEG_WINDOW } from 'node:tls';
 import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { appointment, client, service, staff } from '../dataBase/schema';
-import { eq, sum, count, sql } from 'drizzle-orm';
+import { eq, sum, sql, or } from 'drizzle-orm';
 
 const analyticsRouter: Router = express.Router();
 
@@ -30,6 +28,18 @@ analyticsRouter.get('/revenue_by_month', async(req:Request, res:Response) => {
   order by month
   `);
 
+  res.json(result);
+});
+
+analyticsRouter.get('/revenue_lost', async(req:Request, res:Response) => {
+  const result = await db
+    .select({ revenue_lost: sum(service.price) })
+    .from(appointment)
+    .innerJoin(service, eq(appointment.service_id, service.id))
+    .where(or
+      (eq(appointment.status, 'no show'), 
+      eq(appointment.status, 'cancelled')));
+  
   res.json(result);
 });
 
@@ -68,6 +78,22 @@ analyticsRouter.get('/top_cancelled_client', async(req:Request, res:Response) =>
   `);
 
   res.json(result.rows)
+});
+
+analyticsRouter.get('/retention_rate', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select count(distinct client_id) as total_clients,
+    count(distinct case when appointment_count > 1 then client_id end) as returned_clients,
+    round(count(distinct case when appointment_count > 1 then client_id end) * 100.0 / count(distinct client_id), 2) as retention_rate
+    from(
+      select client_id, 
+        count(*) as appointment_count
+      from appointment
+      where status = 'completed'
+      group by client_id
+    ) as client_counts  
+  `);
+  res.json(result.rows);
 });
 
 
