@@ -3,6 +3,7 @@ import { db } from '../dataBase/db';
 import { appointment, client, service, staff } from '../dataBase/schema';
 import { eq, sum, sql, or } from 'drizzle-orm';
 
+
 const analyticsRouter: Router = express.Router();
 
 analyticsRouter.get('/revenue', async(req:Request, res:Response) => {
@@ -37,7 +38,7 @@ analyticsRouter.get('/revenue_lost', async(req:Request, res:Response) => {
     .from(appointment)
     .innerJoin(service, eq(appointment.service_id, service.id))
     .where(or
-      (eq(appointment.status, 'no show'), 
+      (eq(appointment.status, 'no_show'), 
       eq(appointment.status, 'cancelled')));
   
   res.json(result);
@@ -97,5 +98,35 @@ analyticsRouter.get('/retention_rate', async(req:Request, res:Response) => {
 });
 
 
+analyticsRouter.get('/appointments_today', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select 
+      c.first_name,
+      s.treatment,
+      s.duration,
+      a.appointment_date,
+      a.status
+    from appointment a
+    join client c on a.client_id = c.id
+    join service s on a.service_id = s.id
+    where DATE(appointment_date) = CURRENT_DATE 
+    order by a.appointment_date asc
+  `);
+
+  res.json(result.rows[0]);
+});
+
+analyticsRouter.get('/service_breakdown', async(req:Request, res:Response) => {
+  const result  = await db.execute(sql`
+    select treatment, duration,  sum(s.price)
+    from appointment a
+    join service s on a.service_id = s.id
+    where a.status = 'completed'
+    group by treatment, duration
+    order by sum(price) desc
+  `);
+  
+  res.json(result.rows);
+});
 
 export default analyticsRouter;
