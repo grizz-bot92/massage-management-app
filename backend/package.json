@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/grizz-bot92/massage-management-app#readme",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
     "@types/papaparse": "^5.5.2",
