@@ -1,18 +1,39 @@
 import "./DashBoard.css"
 import React, { useEffect, useState } from "react";
 
+type MonthlyData = {
+  month: string,
+  revenue: string,
+  appointments: string
+}
 
+type NoShowData = {
+  no_show_rate: string,
+  no_shows: string,
+  total: string
+}
 
 
 const DashBoard = () => {
-  // const [monthlyRevenue, setMonthlyRevenue] = useState("");
-  const [totalRevenue, setTotalRevenue] = useState("");
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
+  const [noShowData, setNoShowData] = useState<NoShowData[]>([]);
   
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/revenue`)
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
     .then(response => response.json())
     .then(data => {
-      setTotalRevenue(data.totalRevenue)
+      setMonthlyData(data.rows)
+    })
+
+  }, []);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/no_show_rate`)
+    .then(response => response.json())
+    .then(data => {
+      setNoShowData(data)
+      console.log(data)
     })
   }, []);
 
@@ -32,15 +53,21 @@ const DashBoard = () => {
     <div className="metricCards">
       <div className="metrics">
         <p>This month revenue</p>
-        <h1>{totalRevenue}</h1>
+        {monthlyData.length > 0 && (
+          <h1>${monthlyData[monthlyData.length - 1].revenue}</h1>
+        )}
       </div>
       <div className="metrics">
-        <p>Appointments</p>
-        <h1>38</h1>
+        <p>This months appointments</p>
+        {monthlyData.length > 0 && (
+          <h1>{monthlyData[monthlyData.length - 1].appointments}</h1>
+        )}
       </div>
       <div className="metrics">
         <p>No-show rate</p>
-        <h1>6%</h1>
+        {noShowData.length > 0 && (
+          <h1>{noShowData[noShowData.length - 1].no_show_rate}</h1>
+        )}
       </div>
       <div className="metrics">
         <p>Active clients</p>
