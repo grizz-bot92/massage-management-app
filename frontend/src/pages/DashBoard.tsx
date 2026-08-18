@@ -7,16 +7,21 @@ type MonthlyData = {
   appointments: string
 }
 
-type NoShowData = {
-  no_show_rate: string,
-  no_shows: string,
+type CancellationData = {
+  cancelled_percent: string,
+  cancellations: string,
   total: string
+}
+
+type ActiveClients = {
+  active_clients: string
 }
 
 
 const DashBoard = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
-  const [noShowData, setNoShowData] = useState<NoShowData[]>([]);
+  const [monthlyCancelled, setMonthlyCancelled] = useState<CancellationData[]>([]);
+  const [activeClients, setActiveClients] = useState<ActiveClients | null>(null);
   
 
   useEffect(() => {
@@ -29,13 +34,19 @@ const DashBoard = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/analytics/no_show_rate`)
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/cancelled_monthly`)
     .then(response => response.json())
     .then(data => {
-      setNoShowData(data)
+      setMonthlyCancelled(data)
       console.log(data)
     })
   }, []);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/active_clients`)
+    .then(response => response.json())
+    .then(data => setActiveClients(data));
+  },[]);
 
 
   return(
@@ -43,6 +54,7 @@ const DashBoard = () => {
       <div className="main">
         <div className="header-top">
           <h1 className="title">Sanctuary</h1>
+          <h2>Dashboard</h2>
           <div className="tabs">
             <p>Dashboard</p>
             <p>Analytics</p>
@@ -52,26 +64,26 @@ const DashBoard = () => {
 
     <div className="metricCards">
       <div className="metrics">
-        <p>This month revenue</p>
+        <p>Monthly revenue</p>
         {monthlyData.length > 0 && (
           <h1>${monthlyData[monthlyData.length - 1].revenue}</h1>
         )}
       </div>
       <div className="metrics">
-        <p>This months appointments</p>
+        <p>Monthly appointments</p>
         {monthlyData.length > 0 && (
           <h1>{monthlyData[monthlyData.length - 1].appointments}</h1>
         )}
       </div>
       <div className="metrics">
-        <p>No-show rate</p>
-        {noShowData.length > 0 && (
-          <h1>{noShowData[noShowData.length - 1].no_show_rate}</h1>
+        <p>Monthly cancelled percent</p>
+        {monthlyCancelled.length > 0 && (
+          <h1>{monthlyCancelled[monthlyCancelled.length - 1].cancelled_percent}%</h1>
         )}
       </div>
       <div className="metrics">
         <p>Active clients</p>
-        <h1>24</h1>
+        {activeClients && <h1>{activeClients.active_clients}</h1>}
       </div>
     </div>
 
