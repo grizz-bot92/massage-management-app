@@ -1,1 +1,1 @@
-GET http://localhost:8080/analytics/appointments_today
+GET http://localhost:8080/analytics/revenue

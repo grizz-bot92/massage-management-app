@@ -1,3 +1,4 @@
+
 import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { appointment, client, service, staff } from '../dataBase/schema';
@@ -52,7 +53,7 @@ analyticsRouter.get('/no_show_rate', async(req:Request, res:Response) => {
       count(*) as total
     from appointment
   `);
-  res.json(result.rows[0]);
+  res.json(result.rows);
 });
 
 analyticsRouter.get('/top_visits', async(req:Request, res:Response) => {
@@ -129,4 +130,55 @@ analyticsRouter.get('/service_breakdown', async(req:Request, res:Response) => {
   res.json(result.rows);
 });
 
+analyticsRouter.get('/active_clients', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select count(distinct client_id) as active_clients
+    from appointment
+    where status = 'completed'
+    and appointment_date >= (select max(appointment_date)from appointment) - interval '90 days'
+  `);
+
+  res.json(result.rows[0]);
+});
+
+analyticsRouter.get('/monthly_appt_count', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select 
+      s.treatment, 
+      s.duration,
+      count(*) as bookings,
+      sum(s.price) as revenue
+    from appointment a 
+    join service s on a.service_id = s.id
+    where a.status = 'completed'
+    and date_trunc('month', a.appointment_date) = date_trunc('month', (SELECT MAX(appointment_date) FROM appointment))
+    group by s.treatment, s.duration
+    order by bookings desc; 
+  `);
+  
+  res.json(result.rows)
+});
+
+analyticsRouter.get('/cancelled_monthly', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select 
+      round(count(case when status = 'cancelled' then 1 end) * 100 / count(*), 2) as cancelled_percent,
+      count(case when status = 'cancelled' then 1 end) as cancellations,
+      count(*) as total
+    from appointment
+    where date_trunc('month', appointment_date) = date_trunc('month', (SELECT MAX(appointment_date) FROM appointment));
+  `);
+  res.json(result.rows);
+});
+
+
+analyticsRouter.get('/cancellation_percent', async(req:Request, res:Response) => {
+  const result = await db.execute(sql`
+    select
+      round(count(case when status = 'cancelled' then 1 end) * 100/ count(*), 2) as cancelled_percent,
+      count(*) as total
+    from appointment  
+  `);
+  res.json(result.rows)
+})
 export default analyticsRouter;

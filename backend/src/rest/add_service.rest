@@ -1,1 +1,1 @@
-GET http://localhost:8080/analytics/no_show_rate
+GET http://localhost:8080/analytics/monthly_appt_count
