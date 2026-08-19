@@ -31,6 +31,12 @@ type TopMonth = {
   appointments: string
 }
 
+type TopService = {
+  treatment: string,
+  duration: string, 
+  sum: string
+}
+
 
 const Analytics = () => {
   const [totalRevenue, setTotalRevenue] = useState<Revenue>();
@@ -39,6 +45,7 @@ const Analytics = () => {
   const [revenueLost, setRevenueLost] = useState<RevenueLost>();
   const [topClients, setTopClients] = useState<TopClients[]>([]);
   const [topMonth, setTopMonth] = useState<TopMonth[]>([]);
+  const [topService, setTopService] = useState<TopService[]>([]);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
@@ -88,6 +95,14 @@ const Analytics = () => {
       setTopClients(data)
     })
   }, []);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/service_breakdown`)
+    .then(response =>response.json())
+    .then(data => {
+      setTopService(data)
+    });
+  }, [])
 
   return(
     <div>
@@ -143,8 +158,14 @@ const Analytics = () => {
       )}
       </div>
       <div className="service">
-        <h1>Client list</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
+        <h1>Top Service</h1>
+        {topService.map((service) => (
+          <div className="top-services">
+            <p className="service-info">{service.treatment} {service.duration} min</p>
+            <p>${Number(service.sum).toLocaleString()}</p>
+          </div>
+        )
+        )}
       </div>
       <div className="service">
         <h1>Book appointment</h1>
