@@ -66,7 +66,7 @@ const DashBoard = () => {
       <div className="metrics">
         <p>Monthly revenue</p>
         {monthlyData.length > 0 && (
-          <h1>${monthlyData[monthlyData.length - 1].revenue}</h1>
+          <h1>${Number(monthlyData[monthlyData.length - 1].revenue).toLocaleString()}</h1>
         )}
       </div>
       <div className="metrics">
