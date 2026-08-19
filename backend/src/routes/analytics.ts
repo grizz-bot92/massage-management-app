@@ -27,10 +27,11 @@ analyticsRouter.get('/revenue_by_month', async(req:Request, res:Response) => {
   join service s on a.service_id = s.id
   where a.status = 'completed'
   group by month
-  order by month
+  order by revenue desc
+  limit 5
   `);
 
-  res.json(result);
+  res.json(result.rows);
 });
 
 analyticsRouter.get('/revenue_lost', async(req:Request, res:Response) => {
@@ -42,7 +43,7 @@ analyticsRouter.get('/revenue_lost', async(req:Request, res:Response) => {
       (eq(appointment.status, 'no_show'), 
       eq(appointment.status, 'cancelled')));
   
-  res.json(result);
+  res.json({revenue_lost: result[0].revenue_lost});
 });
 
 analyticsRouter.get('/no_show_rate', async(req:Request, res:Response) => {
@@ -63,7 +64,7 @@ analyticsRouter.get('/top_visits', async(req:Request, res:Response) => {
     left join appointment a on c.id = a.client_id
     where a.status = 'completed'
     group by c.first_name
-    order by count(a.id) desc limit 10
+    order by count(a.id) desc limit 5
   `);
 
   res.json(result.rows);
