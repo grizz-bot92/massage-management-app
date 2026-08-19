@@ -1,1 +1,1 @@
-GET http://localhost:8080/analytics/revenue_by_month
+GET http://localhost:8080/analytics/service_breakdown

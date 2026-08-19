@@ -126,6 +126,7 @@ analyticsRouter.get('/service_breakdown', async(req:Request, res:Response) => {
     where a.status = 'completed'
     group by treatment, duration
     order by sum(price) desc
+    limit 5
   `);
   
   res.json(result.rows);
