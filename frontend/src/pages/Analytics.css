@@ -6,6 +6,20 @@
   padding: 6px 0;
 }
 
+.titles{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.sub-title{
+  margin-top: -30px;
+  margin-left: 20px;
+  font-size: 20px;
+  color: #E4AACF;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 .clientList:last-child{
   border-bottom: none;
 }
@@ -46,4 +60,15 @@
 
 .service-revenue:last-child{
   border-bottom: none;
+}
+
+.num-bookings{
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.table-header{
+  background-color: #3D1F4E !important;
+  color: #F2D4E8 !important;
+  font-weight: bold !important;
 }

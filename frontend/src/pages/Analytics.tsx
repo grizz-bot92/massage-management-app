@@ -1,5 +1,13 @@
-import { useEffect, useState } from "react";
-import "./Analytics.css"
+import React, { useEffect, useState } from "react";
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import "./Analytics.css";
+
 
 type Revenue = {
   total_revenue: string
@@ -54,6 +62,9 @@ const Analytics = () => {
   const [topService, setTopService] = useState<TopService[]>([]);
   const [gainedRevenue, setGainedRevenue] = useState<ServiceRevenue[]>([]);
   const [lostRevenue, setLostRevenue] = useState<ServiceRevenue[]>([]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
@@ -137,8 +148,10 @@ const Analytics = () => {
     <div>
       <div className="main">
         <div className="header-top">
-          <h1 className="title">Sanctuary</h1>
-          <h2>Analytics</h2>
+          <div className="titles">
+            <h1 className="title">Sanctuary</h1>
+            <h2 className="sub-title">Analytics</h2>
+          </div>
           <div className="tabs">
             <p>Dashboard</p>
             <p>Analytics</p>
@@ -168,13 +181,30 @@ const Analytics = () => {
     <div className="serviceCards">
       <div className="service">
         <h1>Top Monthly Revenue</h1>
-        {topMonth.map((month) => (
-          <div className="monthList" key={month.month}>
-            <p className="monthName">{new Date(month.month).toLocaleString('en-US', { month: 'long', year: 'numeric'})}</p>
-            <p>${month.revenue}</p>
-          </div>
-        )  
-      )}
+        <Paper sx={{ width: '100%', overflow: 'hidden'}}>
+          <TableContainer sx={{ maxHeight: 440}}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow sx={{ '&:hover': { backgroundColor: '#FAF5F8' },  '&:last-child td': { border: 0 }, '&:hover': { backgroundColor: '#FAF5F8' } }}>
+                  <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Month</TableCell>
+                  <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Revenue</TableCell>
+                  <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Appointments</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {topMonth.map((month, index) => (
+                  <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FAF5F8' } }}>
+                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>{month.month}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>{Number(month.revenue).toLocaleString()}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535' }}>{month.appointments}</TableCell> 
+                  </TableRow>
+                  )  
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+        
       </div>
       <div className="service">
         <h1>Top clients by visit</h1>
@@ -191,7 +221,7 @@ const Analytics = () => {
         {topService.map((service) => (
           <div className="service-revenue">
             <p className="service-info">{service.treatment} {service.duration} min</p>
-            <p>{Number(service.count).toLocaleString()}</p>
+            <p className="num-bookings">{Number(service.count).toLocaleString()} bookings</p>
           </div>
         )
         )}
