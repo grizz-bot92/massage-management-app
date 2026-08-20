@@ -118,12 +118,26 @@ analyticsRouter.get('/appointments_today', async(req:Request, res:Response) => {
   res.json(result.rows[0]);
 });
 
-analyticsRouter.get('/service_breakdown', async(req:Request, res:Response) => {
+analyticsRouter.get('/revenue_by_service', async(req:Request, res:Response) => {
   const result  = await db.execute(sql`
     select treatment, duration,  sum(s.price)
     from appointment a
     join service s on a.service_id = s.id
     where a.status = 'completed'
+    group by treatment, duration
+    order by sum(price) desc
+    limit 5
+  `);
+  
+  res.json(result.rows);
+});
+
+analyticsRouter.get('/lost_by_service', async(req:Request, res:Response) => {
+  const result  = await db.execute(sql`
+    select treatment, duration,  sum(s.price)
+    from appointment a
+    join service s on a.service_id = s.id
+    where (a.status = 'cancelled' or a.status = 'no_show') 
     group by treatment, duration
     order by sum(price) desc
     limit 5
@@ -182,5 +196,18 @@ analyticsRouter.get('/cancellation_percent', async(req:Request, res:Response) =>
     from appointment  
   `);
   res.json(result.rows)
-})
+});
+
+analyticsRouter.get('/treatment_count', async(req: Request, res:Response) => {
+  const result = await db.execute(sql`
+    select treatment, duration,  count(treatment)
+    from appointment a
+    join service s on a.service_id = s.id
+    where a.status = 'completed'
+    group by treatment , duration
+    order by count(treatment) desc limit 5
+  `);
+  res.json(result.rows)
+});
+
 export default analyticsRouter;
