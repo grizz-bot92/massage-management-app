@@ -34,6 +34,12 @@ type TopMonth = {
 type TopService = {
   treatment: string,
   duration: string, 
+  count: string
+}
+
+type ServiceRevenue = {
+  treatment: string,
+  duration: string,
   sum: string
 }
 
@@ -46,6 +52,8 @@ const Analytics = () => {
   const [topClients, setTopClients] = useState<TopClients[]>([]);
   const [topMonth, setTopMonth] = useState<TopMonth[]>([]);
   const [topService, setTopService] = useState<TopService[]>([]);
+  const [gainedRevenue, setGainedRevenue] = useState<ServiceRevenue[]>([]);
+  const [lostRevenue, setLostRevenue] = useState<ServiceRevenue[]>([]);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
@@ -55,6 +63,25 @@ const Analytics = () => {
       console.log(data)
     });
   }, []);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/lost_by_service`)
+    .then(response => response.json())
+    .then(data => {
+      setLostRevenue(data);
+      console.log(data)
+    });
+  }, []);
+
+  
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_service`)
+    .then(response => response.json())
+    .then(data => {
+      setGainedRevenue(data);
+    });
+  }, []);
+
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue`)
@@ -88,6 +115,7 @@ const Analytics = () => {
   });
   }, []);
 
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/top_visits`)
     .then(response => response.json())
@@ -96,8 +124,9 @@ const Analytics = () => {
     })
   }, []);
 
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/analytics/service_breakdown`)
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/treatment_count`)
     .then(response =>response.json())
     .then(data => {
       setTopService(data)
@@ -160,16 +189,28 @@ const Analytics = () => {
       <div className="service">
         <h1>Top Service</h1>
         {topService.map((service) => (
-          <div className="top-services">
+          <div className="service-revenue">
             <p className="service-info">{service.treatment} {service.duration} min</p>
-            <p>${Number(service.sum).toLocaleString()}</p>
+            <p>{Number(service.count).toLocaleString()}</p>
           </div>
         )
         )}
       </div>
       <div className="service">
-        <h1>Book appointment</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
+        <h1>Revenue gained vs lost</h1>
+        {gainedRevenue.map((gained, index) => (
+          <div className="top-services" key={`${gained.treatment}-${gained.duration}-${index}`}>
+            <p className="service-info">{gained.treatment} {gained.duration} min</p>
+            <p>
+              Gained: ${Number(gained.sum).toLocaleString()}<br />
+              Lost: ${Number(
+                lostRevenue.find(
+                  (lost) => lost.treatment === gained.treatment && lost.duration === gained.duration
+                )?.sum ?? 0
+              ).toLocaleString()}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
       
