@@ -62,7 +62,7 @@ analyticsRouter.get('/top_visits', async(req:Request, res:Response) => {
     left join appointment a on c.id = a.client_id
     where a.status = 'completed'
     group by c.first_name
-    order by count(a.id) desc limit 5
+    order by count(a.id) desc limit 8
   `);
 
   res.json(result.rows);
@@ -203,7 +203,7 @@ analyticsRouter.get('/treatment_count', async(req: Request, res:Response) => {
     join service s on a.service_id = s.id
     where a.status = 'completed'
     group by treatment , duration
-    order by count(treatment) desc limit 5
+    order by count(treatment) desc limit 7
   `);
   res.json(result.rows)
 });

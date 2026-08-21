@@ -206,9 +206,9 @@ const Analytics = () => {
               <TableBody>
                 {topMonth.map((month, index) => (
                   <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FAF5F8' } }}>
-                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>{month.month}</TableCell> 
-                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>${Number(month.revenue).toLocaleString()}</TableCell> 
-                     <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535' }}>{month.appointments}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535', fontWeight: 'bold', fontSize: '1rem'}}>{month.month}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535', fontSize: '1rem' }}>${Number(month.revenue).toLocaleString()}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535', fontSize: '1rem', paddingLeft: '50px' }}>{month.appointments}</TableCell> 
                   </TableRow>
                   )  
                 )}
@@ -239,24 +239,31 @@ const Analytics = () => {
         )}
       </div>
       <div className="service">
-        <h1>Revenue gained vs lost</h1>
-        {gainedRevenue.map((gained, index) => (
-          <div className="top-services" key={`${gained.treatment}-${gained.duration}-${index}`}>
-            <p className="service-info">{gained.treatment} {gained.duration} min</p>
-            <p>
-              Gained: ${Number(gained.sum).toLocaleString()}<br />
-              Lost: ${Number(
-                lostRevenue.find(
-                  (lost) => lost.treatment === gained.treatment && lost.duration === gained.duration
-                )?.sum ?? 0
-              ).toLocaleString()}
-            </p>
-          </div>
-        ))}
+  <h1>Revenue gained vs lost</h1>
+  {gainedRevenue.map((gained, index) => {
+    const lost = lostRevenue.find(
+      (l) => l.treatment === gained.treatment && l.duration === gained.duration
+    );
+    const total = Number(gained.sum) + Number(lost?.sum ?? 0);
+    const gainedPercent = (Number(gained.sum) / total) * 100;
+    console.log(gainedRevenue)
+    return (
+      <div className="top-services" key={`${gained.treatment}-${gained.duration}-${index}`}>
+        <p className="service-info">{gained.treatment} {gained.duration} min</p>
+        <div className="gained-lost-cols">
+          <p style={{ color: '#3D1F4E', fontWeight: 500, minWidth: '100px', marginRight: '200px' }}>${Number(gained.sum).toLocaleString()}</p>
+          <p style={{ color: '#D4537E', fontWeight: 500, minWidth: '100px', textAlign: 'right', marginRight: '20px'}}>${Number(lost?.sum ?? 0).toLocaleString()}</p>  
+        </div>
+        <div style={{ display: 'flex', height: '4px', borderRadius: '2px', overflow: 'hidden', margin: '6px' }}>
+          <div style={{ width: `${gainedPercent}%`, background: '#3D1F4E' }} />
+          <div style={{ width: `${100 - gainedPercent}%`, background: '#D4537E' }} />
+        </div>
+      </div>
+          );
+        })}
       </div>
     </div>
-      
-    </div>
+  </div>
   )
 }
 

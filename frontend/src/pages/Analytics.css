@@ -34,11 +34,16 @@
   margin-right: 10px;
 }
 
-.top-services{
+.service-info{
+  text-align: start;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.top-services {
   display: flex;
-  justify-content: space-between;
-  margin-right: 10px;
-  border-bottom: 0.5px solid #E8D5E8;
+  flex-direction: column;
   padding: 6px 0;
 }
 
@@ -71,5 +76,17 @@
   background-color: #3D1F4E !important;
   color: #F2D4E8 !important;
   font-weight: bold !important;
+}
+
+.gained-lost-cols {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.gained-lost-cols p {
+  min-width: 90px;
+  margin: 0;
 }
 
