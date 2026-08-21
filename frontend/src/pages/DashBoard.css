@@ -16,7 +16,7 @@
   font-size: 2rem;
   color: #F2D4E8;
   margin-left: 1.5rem;
-  padding: 12px;
+  padding: 15px;
   font: Didot, serif
 }
 
@@ -24,8 +24,13 @@
   display: flex;
   color: #F2D4E8;
   gap: 15px;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   padding-right: 2rem;
+}
+
+.tabs, button{
+  font-weight: bold;
+  border-radius: 10px;
 }
 
 .metricCards{

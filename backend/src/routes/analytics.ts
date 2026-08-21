@@ -1,4 +1,3 @@
-
 import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
 import { appointment, client, service, staff } from '../dataBase/schema';
@@ -19,16 +18,15 @@ analyticsRouter.get('/revenue', async(req:Request, res:Response) => {
 
 analyticsRouter.get('/revenue_by_month', async(req:Request, res:Response) => {
   const result = await db.execute(sql`
-  select
-    date_trunc('month', a.appointment_date) as month,
-    sum(s.price) as revenue,
-    count(*) as appointments
-  from appointment a
-  join service s on a.service_id = s.id
-  where a.status = 'completed'
-  group by month
-  order by revenue desc
-  limit 5
+    select
+      to_char(a.appointment_date, 'Month') as month,
+      sum(s.price) as revenue,
+      count(*) as appointments
+    from appointment a
+    join service s on a.service_id  = s.id
+    where a.status = 'completed'
+    group by to_char(a.appointment_date, 'Month')
+    order by revenue desc
   `);
 
   res.json(result.rows);

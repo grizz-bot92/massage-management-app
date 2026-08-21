@@ -1,5 +1,9 @@
 import "./DashBoard.css"
 import React, { useEffect, useState } from "react";
+import Button from '@mui/material/Button';
+import Stack from "@mui/material/Stack";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 type MonthlyData = {
   month: string,
@@ -28,9 +32,9 @@ const DashBoard = () => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
     .then(response => response.json())
     .then(data => {
-      setMonthlyData(data.rows)
-    })
-
+      setMonthlyData(data)
+      console.log(data)
+    });
   }, []);
 
   useEffect(() => {
@@ -38,8 +42,8 @@ const DashBoard = () => {
     .then(response => response.json())
     .then(data => {
       setMonthlyCancelled(data)
-      console.log(data)
-    })
+      
+    });
   }, []);
 
   useEffect(() => {
@@ -53,12 +57,24 @@ const DashBoard = () => {
     <div>
       <div className="main">
         <div className="header-top">
-          <h1 className="title">Sanctuary</h1>
-          <h2>Dashboard</h2>
-          <div className="tabs">
-            <p>Dashboard</p>
-            <p>Analytics</p>
+          <div className="titles">
+            <h1 className="title">Sanctuary</h1>
+            <h2 className="sub-title">Dashboard</h2>
           </div>
+          <div className="tabs">
+            <Stack direction="row" spacing={2}>
+              <a href="http://localhost:5173/dashboard">
+                <Button variant="outlined" startIcon={<DashboardIcon/>}>
+                  Dashboard 
+                </Button>  
+              </a>
+              <a href="http://localhost:5173/analytics">
+                <Button variant="outlined" startIcon={<AnalyticsIcon/>}>
+                  Analytics
+                </Button>
+              </a>
+            </Stack>
+            </div>
         </div>
       </div>
 

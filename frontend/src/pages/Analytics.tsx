@@ -6,6 +6,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import Stack from "@mui/material/Stack";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import "./Analytics.css";
 
 
@@ -62,8 +66,6 @@ const Analytics = () => {
   const [topService, setTopService] = useState<TopService[]>([]);
   const [gainedRevenue, setGainedRevenue] = useState<ServiceRevenue[]>([]);
   const [lostRevenue, setLostRevenue] = useState<ServiceRevenue[]>([]);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
 
 
   useEffect(() => {
@@ -153,8 +155,18 @@ const Analytics = () => {
             <h2 className="sub-title">Analytics</h2>
           </div>
           <div className="tabs">
-            <p>Dashboard</p>
-            <p>Analytics</p>
+            <Stack direction="row" spacing={2}>
+              <a href="http://localhost:5173/dashboard">
+                <Button variant="outlined" startIcon={<DashboardIcon/>}>
+                  Dashboard 
+                </Button>  
+              </a>
+              <a href="http://localhost:5173/analytics">
+                <Button variant="outlined" startIcon={<AnalyticsIcon/>}>
+                  Analytics
+                </Button>
+              </a>
+            </Stack>
           </div>
         </div>
       </div>
@@ -195,7 +207,7 @@ const Analytics = () => {
                 {topMonth.map((month, index) => (
                   <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FAF5F8' } }}>
                      <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>{month.month}</TableCell> 
-                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>{Number(month.revenue).toLocaleString()}</TableCell> 
+                     <TableCell sx={{ fontFamily: 'your-font', color: '#2A1535' }}>${Number(month.revenue).toLocaleString()}</TableCell> 
                      <TableCell sx={{ fontFamily: 'Inter', color: '#2A1535' }}>{month.appointments}</TableCell> 
                   </TableRow>
                   )  
