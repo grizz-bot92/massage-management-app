@@ -21,12 +21,20 @@ type ActiveClients = {
   active_clients: string
 }
 
+type TodaysClients = {
+  first_name: string,
+  treatment: string,
+  duration: string,
+  appointment_date: string,
+  status: string
+}
+
 
 const DashBoard = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [monthlyCancelled, setMonthlyCancelled] = useState<CancellationData[]>([]);
   const [activeClients, setActiveClients] = useState<ActiveClients | null>(null);
-  
+  const [todayAppointments, setTodaysAppointments] = useState<TodaysClients | "No one booked today">();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
@@ -36,6 +44,17 @@ const DashBoard = () => {
       console.log(data)
     });
   }, []);
+  
+
+  useEffect(()=> {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/appointments_today`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      setTodaysAppointments(data)
+    })
+  }, []);
+
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/cancelled_monthly`)
@@ -106,7 +125,7 @@ const DashBoard = () => {
     <div className="serviceCards">
       <div className="service">
         <h1>Today's schedule</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
+
       </div>
       <div className="service">
         <h1>Top services this month</h1>
