@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import Stack from "@mui/material/Stack";
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
 type MonthlyData = {
   month: string,
@@ -136,9 +138,37 @@ const DashBoard = () => {
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
       </div>
       <div className="service">
-        <h1>Book appointment</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
+        <form className="booking-form">
+          <label className="book-appt">
+           Book appointment
+          </label>
+          <label className="client-name">
+            Client
+            <input type="text" name="name" />
+          </label>
+          <label className="service-type">
+            Service
+            <select>
+              <option value="Custom 60 min">Custom Massage 60 min</option>
+              <option value="Custom 90 min">Custom Massage 90 min</option>
+            </select>
+          </label>
+          <div className="date-time">
+            <div className="date">
+              <label className="date">Date </label>
+              <input type="text" name="date" />
+            </div>
+            <CalendarTodayIcon sx={{marginTop: '15px', color: '#5a1c7c'}}/>
+            <div className="time">
+              <label className="time">Time</label>
+              <input type="text" name="time" />
+            </div>
+            <AccessAlarmIcon sx={{marginTop: '15px', color: '#5a1c7c'}}/> 
+          </div>
+          <button className="book-btn">Book Appointment</button>
+        </form>
       </div>
+      
     </div>
       
     </div>

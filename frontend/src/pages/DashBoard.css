@@ -80,3 +80,60 @@
   text-align: center;
   margin: 10px;
 }
+
+.booking-form{
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin: 15px;
+  gap: 10px;
+}
+
+.book-appt{
+  margin: 10px;
+  font-weight: bold;
+  color: #5a1c7c;
+}
+
+.client-name{
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  color: #C07AAB;
+  gap: 2px;
+}
+
+.date-time{
+  display: flex;
+  margin: 10px;
+  gap: 15px;
+  color: #C07AAB;
+}
+
+.service-type{
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  color: #C07AAB;
+  gap: 2px;
+}
+
+.book-btn{
+  background-color: #F2D4E8;
+  border: 1px solid #5a1c7c;
+  margin-top: 1rem;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.date{
+  display: flex;
+  flex-direction: column;
+}
+
+.time{
+  display: flex;
+  flex-direction: column;
+}
+
+
