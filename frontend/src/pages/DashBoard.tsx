@@ -6,6 +6,20 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import Select from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import  { AdapterDayjs }from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import { Margin } from "@mui/icons-material";
+
 
 type MonthlyData = {
   month: string,
@@ -31,28 +45,44 @@ type TodaysClients = {
   status: string
 }
 
+type Services = {
+  id: number,
+  treatment: string,
+  price: string,
+  duration: string
+}
+
 
 const DashBoard = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [monthlyCancelled, setMonthlyCancelled] = useState<CancellationData[]>([]);
   const [activeClients, setActiveClients] = useState<ActiveClients | null>(null);
   const [todayAppointments, setTodaysAppointments] = useState<TodaysClients | "No one booked today">();
+  const [service, setService] = useState<Services[]>([]);
+  const [selectedService, setSelectedService] = useState("");
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/revenue_by_month`)
     .then(response => response.json())
     .then(data => {
       setMonthlyData(data)
-      console.log(data)
     });
   }, []);
   
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/services`)
+    .then(response => response.json())
+    .then(data => {
+      setService(data)
+      console.log(data)
+    });
+    
+  }, []);
 
   useEffect(()=> {
     fetch(`${import.meta.env.VITE_API_URL}/analytics/appointments_today`)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
       setTodaysAppointments(data)
     })
   }, []);
@@ -63,7 +93,6 @@ const DashBoard = () => {
     .then(response => response.json())
     .then(data => {
       setMonthlyCancelled(data)
-      
     });
   }, []);
 
@@ -73,6 +102,9 @@ const DashBoard = () => {
     .then(data => setActiveClients(data));
   },[]);
 
+  const handleTreatmentChange = (e: SelectChangeEvent) => {
+    setSelectedService(e.target.value as string);
+  }
 
   return(
     <div>
@@ -143,29 +175,49 @@ const DashBoard = () => {
            Book appointment
           </label>
           <label className="client-name">
-            Client
-            <input type="text" name="name" />
+            <Box
+              component="form"
+              sx={{ '& > :not(style)': { m: 0.5, width: '25ch' } }}
+              noValidate
+              autoComplete="off"
+            >
+            <TextField id="outlined-basic" label="Client" variant="outlined" />
+            </Box>
           </label>
-          <label className="service-type">
-            Service
-            <select>
-              <option value="Custom 60 min">Custom Massage 60 min</option>
-              <option value="Custom 90 min">Custom Massage 90 min</option>
-            </select>
-          </label>
+          <Box sx={{ minWidth: 120, margin: '15px'}}>
+            <FormControl fullWidth>
+            <InputLabel id="Treatment">Treatment</InputLabel>
+            <Select
+              id="treatment"
+              onChange={handleTreatmentChange} 
+              value={selectedService}
+              label="Treatment"
+            >
+              {service?.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.treatment} {s.duration} min
+                </option>
+              ))}
+            </Select> 
+            </FormControl>
+          </Box>
           <div className="date-time">
             <div className="date">
-              <label className="date">Date </label>
-              <input type="text" name="date" />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker label="Date"/>
+                </DemoContainer>
+              </LocalizationProvider>
             </div>
-            <CalendarTodayIcon sx={{marginTop: '15px', color: '#5a1c7c'}}/>
             <div className="time">
-              <label className="time">Time</label>
-              <input type="text" name="time" />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['Timepicker']}>
+                  <TimePicker label="Time" />
+                </DemoContainer>
+              </LocalizationProvider>
             </div>
-            <AccessAlarmIcon sx={{marginTop: '15px', color: '#5a1c7c'}}/> 
           </div>
-          <button className="book-btn">Book Appointment</button>
+          <Button color="secondary" sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Book Appointment</Button>
         </form>
       </div>
       
