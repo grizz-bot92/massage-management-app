@@ -1,13 +1,15 @@
+import { appointment } from './../dataBase/schema';
 import express, { Request, Response, Router } from 'express';
 import { db } from '../dataBase/db';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { appointment as appointmentSchema } from '../dataBase/schema';
 import authenticate from '../middleware/auth';
 
 const appointmentRouter: Router = express.Router();
 
 appointmentRouter.get('/', async (req:Request, res:Response) => {
-  const appointments = await db.select().from(appointmentSchema);
+  // const appointments = await db.select().from(appointmentSchema).limit(5);
+  const appointments = await db.select().from(appointmentSchema).orderBy(desc(appointmentSchema.appointment_date)).limit(1);
   res.json(appointments);
 });
 
@@ -19,7 +21,12 @@ appointmentRouter.get('/:id', async (req:Request, res:Response) => {
 
 appointmentRouter.post('/', async (req:Request, res:Response) => {
   const { client_id, service_id, staff_id, appointment_date, status } = req.body;
-  const appointment = await db.insert(appointmentSchema).values([{ client_id, service_id, staff_id, appointment_date, status }]).returning();
+  const date = new Date(appointment_date);
+  const appointment = await db.insert(appointmentSchema).values([{ client_id, service_id, staff_id, appointment_date: date, status }]).returning();
+
+  console.log('appointment_date received:', appointment_date);
+  console.log('parsed date:', new Date(appointment_date));
+  
   res.json(appointment);
 });
 
