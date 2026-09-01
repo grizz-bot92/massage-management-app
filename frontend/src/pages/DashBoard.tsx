@@ -17,7 +17,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Checkbox, FormControlLabel } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 
 type MonthlyData = {
@@ -68,8 +68,10 @@ const DashBoard = () => {
   const [selectedService, setSelectedService] = useState<Services | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [date, setDate] = useState<string>(" ");
-  const [time, setTime] = useState<string>(" ");
+  const [date, setDate] = useState<string>("");
+  const [time, setTime] = useState<string>("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/clients`)
@@ -124,7 +126,7 @@ const DashBoard = () => {
   const bookAppointment = async() => {
     if (!selectedClient || !selectedService) return;
     try{
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/appointments`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/appointments`, {
         client_id: selectedClient.id,
         service_id: selectedService.id,
         staff_id: "44d6f516-9592-48fd-806a-263bd52c6181",
@@ -132,8 +134,19 @@ const DashBoard = () => {
         status: 'confirmed'
       });
 
-      console.log(result);
+    }catch(e){
+      console.error(e)
+    }
+  }
 
+  const addClient = async() => {
+    try{
+      const result = await axios.post(`${import.meta.env.VITE_API_URL}/clients`, {
+        first_name: firstName,
+        last_name: lastName,
+        status: 'active'
+      });
+      console.log(result)
     }catch(e){
       console.error(e)
     }
@@ -144,6 +157,15 @@ const DashBoard = () => {
     const selected = service.find(s => s.id === e.target.value);
     setSelectedService(selected || null);
   }
+
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFirstName(e.target.value)
+  }
+
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setLastName(e.target.value)
+  }
+
 
   return(
     <div>
@@ -203,28 +225,31 @@ const DashBoard = () => {
       <div className="service">
         <h1>New client</h1>
           <div className="client-to-add">
-            <label className="first-name">
+            <span className="name">
+              <label className="first-name">
             <Box
               component="form"
-              sx={{ '& > :not(style)': { m: 0.5, width: '25ch' } }}
+              sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
               noValidate
               autoComplete="off"
             >
-            <TextField type="text" label="First Name" variant="outlined"/>
+            <TextField type="text" label="First Name" variant="outlined" onChange={handleFirstNameChange}/>
             </Box>
             </label>
             <label className="last-name">
               <Box
                 component="form"
-                sx={{ '& > :not(style)': { m: 0.5, width: '25ch' } }}
+                sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
                 noValidate
                 autoComplete="off"
               >
-              <TextField type="text" label="Last Name" variant="outlined"/>
+              <TextField type="text" label="Last Name" variant="outlined" onChange={handleLastNameChange}/>
               </Box>
             </label>
+            </span>
+            <FormControlLabel control={<Checkbox  defaultChecked/>} label="Active"/>
           </div>
-          <Button color="secondary" sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
+          <Button onClick={addClient} color="secondary" sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
       </div>
       <div className="service">
         <h1>Client list</h1>
