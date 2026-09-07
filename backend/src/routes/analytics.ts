@@ -100,7 +100,7 @@ analyticsRouter.get('/retention_rate', async(req:Request, res:Response) => {
 
 analyticsRouter.get('/appointments_today', async(req:Request, res:Response) => {
   const result = await db.execute(sql`
-    select 
+    select
       c.first_name,
       s.treatment,
       s.duration,
@@ -111,9 +111,10 @@ analyticsRouter.get('/appointments_today', async(req:Request, res:Response) => {
     join service s on a.service_id = s.id
     where DATE(appointment_date) = CURRENT_DATE 
     order by a.appointment_date asc
+    limit 4
   `);
 
-  res.json(result.rows[0]);
+  res.json(result.rows);
 });
 
 analyticsRouter.get('/revenue_by_service', async(req:Request, res:Response) => {
@@ -149,7 +150,7 @@ analyticsRouter.get('/active_clients', async(req:Request, res:Response) => {
     select count(distinct client_id) as active_clients
     from appointment
     where status = 'completed'
-    and appointment_date >= (select max(appointment_date)from appointment) - interval '90 days'
+    and appointment_date >= (select max(appointment_date)from appointment) - interval ' 3 years '
   `);
 
   res.json(result.rows[0]);

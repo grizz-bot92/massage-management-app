@@ -17,8 +17,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import { Autocomplete, Checkbox, FormControlLabel } from "@mui/material";
+import { Autocomplete, Checkbox, FormControlLabel, TextareaAutosize } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
+import PhoneInput from 'react-phone-number-input/input';
 
 type MonthlyData = {
   month: string,
@@ -37,6 +38,7 @@ type ActiveClients = {
 }
 
 type TodaysClients = {
+  id: string,
   first_name: string,
   treatment: string,
   duration: string,
@@ -59,19 +61,24 @@ type Services = {
   duration: string
 }
 
+
 const DashBoard = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [monthlyCancelled, setMonthlyCancelled] = useState<CancellationData[]>([]);
   const [activeClients, setActiveClients] = useState<ActiveClients | null>(null);
-  // const [todayAppointments, setTodaysAppointments] = useState<TodaysClients | "No one booked today">();
+  const [todayAppointments, setTodaysAppointments] = useState<TodaysClients[]>([]);
   const [service, setService] = useState<Services[]>([]);
   const [selectedService, setSelectedService] = useState<Services | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+
+  const todaysDate = new Date().toLocaleDateString();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/clients`)
@@ -97,14 +104,16 @@ const DashBoard = () => {
       setService(data)
     });
   }, []);
+  
 
-  // useEffect(()=> {
-  //   fetch(`${import.meta.env.VITE_API_URL}/analytics/appointments_today`)
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     setTodaysAppointments(data)
-  //   })
-  // }, []);
+  useEffect(()=> {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/appointments_today`)
+    .then(response => response.json())
+    .then(data => {
+      setTodaysAppointments(data)
+      console.log(data)
+    });
+  }, []);
 
 
   useEffect(() => {
@@ -141,22 +150,42 @@ const DashBoard = () => {
 
   const addClient = async() => {
     try{
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/clients`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/clients`, {
         first_name: firstName,
         last_name: lastName,
+        phone_number: phoneNumber,
+        note: note,
         status: 'active'
       });
-      console.log(result)
     }catch(e){
       console.error(e)
     }
   }
 
+  const updateStatus = async(id: string, newStatus: string) => {
+    try{
+      const result = await axios.patch(`${import.meta.env.VITE_API_URL}/appointments/status`, {
+        id: id,  
+        status: newStatus
+      });
+      console.log(result)
+    }catch(e){
+      console.error(e)
+    }
+    fetchTodaysAppointments();
+  }
+
+  const fetchTodaysAppointments = () => {
+    fetch(`${import.meta.env.VITE_API_URL}/analytics/appointments_today`)
+    .then(response => response.json())
+    .then(data => setTodaysAppointments(data));
+  };
 
   const handleTreatmentChange = (e: SelectChangeEvent<string>) => {
     const selected = service.find(s => s.id === e.target.value);
     setSelectedService(selected || null);
   }
+
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFirstName(e.target.value)
@@ -165,6 +194,14 @@ const DashBoard = () => {
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setLastName(e.target.value)
   }
+
+  const handlePhoneNumberChange = (value?: string) => {
+    setPhoneNumber(value ?? "")
+  }
+
+  const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setNote(e.target.value)
+  } 
 
 
   return(
@@ -219,41 +256,92 @@ const DashBoard = () => {
 
     <div className="serviceCards">
       <div className="service">
-        <h1>Today's schedule</h1>
+        <h1>Today's schedule {todaysDate}</h1>
+        <div className="client-list">
+          {todayAppointments.map((appointment) => (
+            <div key={appointment.id} className="schedule-row">
+              <div className="schedule-info">
+                <span className="schedule-name">{appointment.first_name}</span>
+                <span className="schedule-service">{appointment.treatment} - {appointment.duration} min</span>
+              </div>
+              <div className="schedule-right-side">
+                <span className="schedule-time"> 
+                  {new Date(appointment.appointment_date).toLocaleTimeString("en-US", {
+                    hour: "2-digit", 
+                    minute: "2-digit", 
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}
+                  )}
+                </span>
+                <select 
+                  className="status-select"
+                  value={appointment.status}
+                  onChange={(e) => updateStatus(appointment.id, e.target.value)}
+                >
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                  <option value="no_show">No Show</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div> 
+            </div>
+          ))}
+        </div>
 
       </div>
       <div className="service">
         <h1>New client</h1>
           <div className="client-to-add">
-            <span className="name">
-              <label className="first-name">
-            <Box
-              component="form"
-              sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
-              noValidate
-              autoComplete="off"
-            >
-            <TextField type="text" label="First Name" variant="outlined" onChange={handleFirstNameChange}/>
-            </Box>
-            </label>
-            <label className="last-name">
-              <Box
-                component="form"
-                sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
-                noValidate
-                autoComplete="off"
-              >
-              <TextField type="text" label="Last Name" variant="outlined" onChange={handleLastNameChange}/>
-              </Box>
-            </label>
+            <div className="name">
+              <span className="first-name">
+                <label >
+                  <Box
+                    component="form"
+                    sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                  <TextField type="text" label="First Name" variant="outlined" onChange={handleFirstNameChange}/>
+                  </Box>
+                </label>
+              </span>
+            <span className="last-name">
+              <label>
+                <Box
+                  component="form"
+                  sx={{ '& > :not(style)': { m: 0.5, width: '35ch' } }}
+                  noValidate
+                  autoComplete="off"
+                >
+                <TextField type="text" label="Last Name" variant="outlined" onChange={handleLastNameChange}/>
+                </Box>
+              </label>
             </span>
+            </div>
+            <div className="phone-number">
+              <PhoneInput
+                country="US"
+                placeholder="Enter phone number"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                style={{ height: 50, width: '25ch', borderRadius: 5, fontSize: '18px'}}
+              />
+            </div>
             <FormControlLabel control={<Checkbox  defaultChecked/>} label="Active"/>
+            <div className="client-notes">
+              <TextareaAutosize
+                aria-label="empty textarea"
+                placeholder="Client notes"
+                onChange={handleNoteChange}
+                style={{ width: 200 }}
+            />
+            </div>
+          
           </div>
           <Button onClick={addClient} color="secondary" sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
       </div>
       <div className="service">
-        <h1>Client list</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ipsam incidunt debitis perferendis eum optio eligendi neque praesentium dolorum? Est a consectetur libero earum magnam!</p>
+        <h1>Payment</h1>
+        <p>Stripe integration coming soon!</p>
       </div>
       <div className="service">
         <h1>Book Appointment</h1>

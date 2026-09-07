@@ -4,6 +4,8 @@ export const client = pgTable('client', {
   id: uuid('id').primaryKey().defaultRandom(),
   first_name: varchar('first_name').notNull(),
   last_name: varchar('last_name'),
+  phone_number: varchar('phone'),
+  notes: varchar('notes'),
   status: varchar('status')
 });
 
@@ -26,7 +28,7 @@ export const appointment = pgTable('appointment', {
   client_id: uuid('client_id').references(() => client.id),
   service_id: uuid('service_id').references(() => service.id),
   staff_id: uuid('staff_id').references(() => staff.id),
-  appointment_date: timestamp('appointment_date'),
+  appointment_date: timestamp('appointment_date', {withTimezone: true}),
   status: varchar('status')
 });
 

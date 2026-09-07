@@ -141,6 +141,65 @@
   margin: 25px;
   margin-left: 250px;
   gap: 55px;
-} 
+}
 
+.phone-number{
+  min-height: auto;
+}
+
+.schedule-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 0.5px solid #E8D5E8;
+}
+
+.schedule-row:last-child {
+  border-bottom: none;
+}
+
+.schedule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 10px;
+}
+
+.schedule-right-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right:10px;
+}
+
+.schedule-name {
+  display: flex;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #2A1535;
+  font-size: 16px;
+}
+
+.schedule-service {
+  font-size: 15px;
+  color: #7A6080;
+}
+
+.schedule-time {
+  font-size: 16px;
+  color: #3D1F4E;
+  font-weight: 500;
+  margin: 10px;
+}
+
+.status-select {
+  border: 0.5px solid #C07AAB;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #3D1F4E;
+  background: #FAF5F8;
+  cursor: pointer;
+}
 
