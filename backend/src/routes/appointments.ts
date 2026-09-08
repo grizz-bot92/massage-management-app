@@ -19,7 +19,7 @@ appointmentRouter.get('/:id', async (req:Request, res:Response) => {
   res.json(appointment);
 });
 
-appointmentRouter.post('/', async (req:Request, res:Response) => {
+appointmentRouter.post('/', authenticate, async (req:Request, res:Response) => {
   const { client_id, service_id, staff_id, appointment_date, status } = req.body;
   const date = new Date(appointment_date);
   const appointment = await db.insert(appointmentSchema).values([{ client_id, service_id, staff_id, appointment_date: date, status }]).returning();

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { db } from '../dataBase/db';
 import express, { Request, Response, Router } from 'express';
-import { users  } from '../dataBase/users';
+import { users } from '../dataBase/schema';
 import { rateLimit } from 'express-rate-limit';
 import { eq } from 'drizzle-orm';
 
