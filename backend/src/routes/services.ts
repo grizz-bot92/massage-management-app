@@ -13,7 +13,7 @@ serviceRouter.get('/', async(req:Request, res:Response) => {
 });
 
 serviceRouter.get('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const service = await db.select().from(serviceSchema).where(eq(serviceSchema.id, id));
   res.json(service);
 })
@@ -25,14 +25,14 @@ serviceRouter.post('/',  async(req:Request, res:Response) => {
 });
 
 serviceRouter.put('/:id',  async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const { treatment, price, duration } = req.body;
   const service = await db.update(serviceSchema).set({ treatment, price, duration }).where(eq(serviceSchema.id, id)).returning();
   res.json(service);
 });
 
 serviceRouter.delete('/:id', async(req:Request, res:Response) => {
-  const { id }  = req.params;
+  const { id }  = req.params as { id:string };
   const service = await db.delete(serviceSchema).where(eq(serviceSchema.id, id)).returning();
   res.json(service);
 });

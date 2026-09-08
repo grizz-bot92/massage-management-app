@@ -12,7 +12,7 @@ staffRouter.get('/', async(req:Request, res:Response) => {
 });
 
 staffRouter.get('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const staff = await db.select().from(staffSchema).where(eq(staffSchema.id, id));
   res.json(staff);
 });
@@ -24,14 +24,14 @@ staffRouter.post('/',  async(req:Request, res:Response) => {
 });
 
 staffRouter.put('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const { first_name, last_name } = req.body;
   const staff = await db.update(staffSchema).set({ first_name, last_name }).where(eq(staffSchema.id, id)).returning();
   res.json(staff);
 });
 
 staffRouter.delete('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const staff = await db.delete(staffSchema).where(eq(staffSchema.id, id)).returning();
   res.json(staff);
 })

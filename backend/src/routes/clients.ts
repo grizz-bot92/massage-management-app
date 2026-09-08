@@ -12,7 +12,7 @@ clientRouter.get('/', async (req:Request, res:Response) => {
 })
 
 clientRouter.get('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
   const user = await db.select().from(clientSchema).where(eq(clientSchema.id, id));
   res.json(user);
 })
@@ -24,14 +24,14 @@ clientRouter.post('/', authenticate, async (req:Request, res:Response) => {
 });
 
 clientRouter.put('/:id',  async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const { first_name, last_name, status } = req.body;
   const client = await db.update(clientSchema).set({ first_name, last_name, status }).where(eq(clientSchema.id, id)).returning();
   res.json(client);
 })
 
 clientRouter.delete('/:id', async(req:Request, res:Response) => {
-  const { id } = req.params;
+  const { id } = req.params as { id:string };
   const client  = await db.delete(clientSchema).where(eq(clientSchema.id, id)).returning();
   res.json(client);
 })
