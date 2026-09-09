@@ -35,6 +35,8 @@ const Login = () => {
 
     if(decoded.role === 'admin'){
       navigate('/')
+      }else{
+        navigate('/login')
       }
     }catch {
       setErrorMessage('Incorrect login information');
