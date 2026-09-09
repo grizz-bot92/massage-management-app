@@ -6,6 +6,8 @@ import { users } from '../../backend/src/dataBase/schema';
 async function createUser(username: string, password: string, role: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await db.insert(users).values({ username, password: hashedPassword, role}).returning();
+  
+  console.log('user created', result)
   process.exit(0);
 }
 
