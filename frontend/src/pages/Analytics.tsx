@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import "./Analytics.css";
+import { Link } from "react-router-dom";
 
 
 type Revenue = {
@@ -156,16 +157,16 @@ const Analytics = () => {
           </div>
           <div className="tabs">
             <Stack direction="row" spacing={2}>
-              <a href="http://localhost:5173/dashboard">
+              <Link to="/dashboard">
                 <Button variant="outlined" startIcon={<DashboardIcon/>}>
                   Dashboard 
                 </Button>  
-              </a>
-              <a href="http://localhost:5173/analytics">
+              </Link>
+              <Link to="/analytics">
                 <Button variant="outlined" startIcon={<AnalyticsIcon/>}>
                   Analytics
                 </Button>
-              </a>
+              </Link>
             </Stack>
           </div>
         </div>

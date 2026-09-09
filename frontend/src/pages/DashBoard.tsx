@@ -20,6 +20,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Autocomplete, Checkbox, FormControlLabel, TextareaAutosize } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 import PhoneInput from 'react-phone-number-input/input';
+import { Link } from "react-router-dom";
 
 type MonthlyData = {
   month: string,
@@ -214,16 +215,16 @@ const DashBoard = () => {
           </div>
           <div className="tabs">
             <Stack direction="row" spacing={2}>
-              <a href="http://localhost:5173/dashboard">
+              <Link to="/dashboard">
                 <Button variant="outlined" startIcon={<DashboardIcon/>}>
                   Dashboard 
                 </Button>  
-              </a>
-              <a href="http://localhost:5173/analytics">
+              </Link>
+              <Link to="/analytics">
                 <Button variant="outlined" startIcon={<AnalyticsIcon/>}>
                   Analytics
                 </Button>
-              </a>
+              </Link>
             </Stack>
             </div>
         </div>
