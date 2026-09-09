@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -197,7 +197,7 @@ const Analytics = () => {
           <TableContainer sx={{ maxHeight: 440}}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
-                <TableRow sx={{ '&:hover': { backgroundColor: '#FAF5F8' },  '&:last-child td': { border: 0 }, '&:hover': { backgroundColor: '#FAF5F8' } }}>
+                <TableRow sx={{ '&:hover': { backgroundColor: '#FAF5F8' } }}>
                   <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Month</TableCell>
                   <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Revenue</TableCell>
                   <TableCell sx={{backgroundColor: '#3D1F4E', color: '#F2D4E8', fontWeight: 'bold'}}>Appointments</TableCell>
