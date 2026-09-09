@@ -21,6 +21,7 @@ import { Autocomplete, Checkbox, FormControlLabel, TextareaAutosize } from "@mui
 import MenuItem from '@mui/material/MenuItem';
 import PhoneInput from 'react-phone-number-input/input';
 import { Link } from "react-router-dom";
+import logo from '../assets/logo.jpg';
 
 type MonthlyData = {
   month: string,
@@ -259,7 +260,14 @@ const DashBoard = () => {
       <div className="service">
         <h1>Today's schedule {todaysDate}</h1>
         <div className="client-list">
-          {todayAppointments.map((appointment) => (
+          {todayAppointments.length === 0 ? (
+            <div className="no-appt-today">
+              <p>No appointments today!</p>
+              <img className="sleeping-sloth" src={logo} alt={"sloth sleeping"}/>
+            </div>
+            
+          ):(
+          todayAppointments.map((appointment) => (
             <div key={appointment.id} className="schedule-row">
               <div className="schedule-info">
                 <span className="schedule-name">{appointment.first_name}</span>
@@ -285,7 +293,7 @@ const DashBoard = () => {
                 </select>
               </div> 
             </div>
-          ))}
+          )))}
         </div>
 
       </div>

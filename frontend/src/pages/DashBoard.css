@@ -203,3 +203,10 @@
   cursor: pointer;
 }
 
+.no-appt-today p{
+  font-size:20px;
+}
+
+.sleeping-sloth{
+  width: 300px;
+}
