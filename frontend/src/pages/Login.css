@@ -3,18 +3,30 @@
   padding: 3.25rem 1.5rem;
   display:flex;
   flex-direction:column;
+  color: #F2D4E8;
+  justify-content: space-between;
+}
+
+.header-login .race-label{
+  font-size: 30px;
+}
+
+.header-login h2{
+  font-size: 25px;
+  
 }
 
 .sign-in-container{
   background: #fff;
   border-bottom: 3px solid #3D1F4E;
-  max-width: 480px;
+  max-width: 500px;
   border-radius: 8px;
   margin: 1.5rem auto;
+  padding: 1.5rem;
 }
 
 .username{
-  padding: 1.5rem 1.5rem 0;
+  padding: 1rem 1.5rem 0;
   font-size: 16px;
 }
 
@@ -49,8 +61,18 @@
   appearance: none;
 }
 
+.submitBtn{
+  display: flex;
+  margin: 2.5rem 13rem;
+}
+
+.submitBtn button{
+  padding:1rem;
+  color: white;
+  background-color: #3D1F4E;
+}
+
 .footer{
-  font-size: 16px;
   font-family: monospace;
-  margin: 1.5rem 6rem;
+  margin: 1.5rem 10rem;
 }

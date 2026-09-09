@@ -52,14 +52,14 @@ const Login = () => {
   return(
     <div>
       <div className="header-login">
-        <p className="race-label">Sign In</p>
         <h2>Welcome to the Sanctuary</h2>
+        <p className="race-label">Sign In</p>
       </div>
 
       <div className="sign-in-container">
         <form onSubmit={handleLogin}>
           <div className="username">
-            <p style={{color: "#5a1c7c", fontFamily: "monospace", fontWeight: "bold"}}>
+            <p style={{color: "#5a1c7c", fontFamily: "monospace", fontWeight: "bold", fontSize: "20px"}}>
               Username
               <input 
                 type="text" 
@@ -69,7 +69,7 @@ const Login = () => {
             </p>   
           </div>
           <div className="password">
-            <p style={{color: "#5a1c7c", fontFamily: "monospace", fontWeight: "bold"}}>
+            <p style={{color: "#5a1c7c", fontFamily: "monospace", fontWeight: "bold", fontSize: "20px"}}>
               Password
               <input 
                 type="password"
@@ -82,7 +82,7 @@ const Login = () => {
             <button style={{fontWeight: 'bold'}} type="submit">Sign in</button>
           </div>
         </form>
-        {errorMessage && <p style={{ color: '#B5502E', textAlign: 'center', fontSize: '13px'}}>{errorMessage}</p>}
+        {errorMessage && <p style={{ color: '#B5502E', textAlign: 'center', fontSize: '16px'}}>{errorMessage}</p>}
         <div className="footer">
           <p>Sanctuary · Welcome</p>
         </div>
