@@ -61,6 +61,16 @@
   appearance: none;
 }
 
+input[type="checkbox"] {
+  width: auto;
+  height: auto;
+  appearance: checkbox;
+}
+
+.show-password-div{
+  margin-left: 9rem;
+}
+
 .submitBtn{
   display: flex;
   margin: 2.5rem 13rem;
@@ -73,6 +83,7 @@
 }
 
 .footer{
+  font-size: 25px;
   font-family: monospace;
-  margin: 1.5rem 10rem;
+  margin: 1.7rem 10.5rem;
 }

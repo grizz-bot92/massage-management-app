@@ -63,11 +63,12 @@
 
 .serviceCards{ 
   display: grid;
+  min-height: 1000px;
   grid-template-columns: .5fr .5fr;
   width: auto;
   justify-content: center;
-  padding: 1rem;
-  margin: 5px;
+  padding: 1.5rem;
+  margin: 20px;
 }
 
 .service{

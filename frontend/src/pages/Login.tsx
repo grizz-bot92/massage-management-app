@@ -16,10 +16,11 @@ interface User {
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
-
+  const handleShowPassword = () => setShowPassword((show) => !show )
 
   const login = async() => {
     try{
@@ -34,7 +35,7 @@ const Login = () => {
     localStorage.setItem('token', token);
 
     if(decoded.role === 'admin'){
-      navigate('/')
+      navigate('/dashboard')
       }else{
         navigate('/login')
       }
@@ -42,7 +43,7 @@ const Login = () => {
       setErrorMessage('Incorrect login information');
       setTimeout(() => {
         setErrorMessage(null)
-      }, 1000);
+      }, 2000);
     }
   }
 
@@ -74,10 +75,21 @@ const Login = () => {
             <p style={{color: "#5a1c7c", fontFamily: "monospace", fontWeight: "bold", fontSize: "20px"}}>
               Password
               <input 
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={({ target }) => setPassword(target.value)} 
+                onChange={({ target }) => setPassword(target.value)}
               />
+              <br />
+              <br />
+              <div className="show-password-div">
+                <label>Show Password</label>
+                <input 
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={handleShowPassword}
+                />
+              </div>
+              
             </p>
           </div>
           <div className="submitBtn">

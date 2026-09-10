@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Stack from "@mui/material/Stack";
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import { BarChart } from '@mui/x-charts/BarChart';
 import "./Analytics.css";
 import { Link } from "react-router-dom";
 
@@ -145,7 +146,17 @@ const Analytics = () => {
     .then(data => {
       setTopService(data)
     });
-  }, [])
+  }, []);
+
+  const chart = {
+    xAxis: [
+      {
+        label: 'Top Service by Bookings',
+      },
+    ],
+    height:500,
+    margin: { left: 0 },
+  };
 
   return(
     <div>
@@ -230,41 +241,45 @@ const Analytics = () => {
       )}
       </div>
       <div className="service">
-        <h1>Top Service</h1>
-        {topService.map((service) => (
-          <div className="service-revenue">
-            <p className="service-info">{service.treatment} {service.duration} min</p>
-            <p className="num-bookings">{Number(service.count).toLocaleString()} bookings</p>
-          </div>
-        )
-        )}
-      </div>
+        <h1>Top Services</h1>
+        <BarChart
+          dataset={topService.map((service) => ({
+            treatment: `${service.treatment} ${service.duration}min`,
+            bookings: Number(service.count)
+          }))}
+          yAxis={[{ scaleType: 'band', dataKey: 'treatment' }]}
+          series={[{ dataKey: 'bookings', label: 'Bookings' }]}
+          layout="horizontal"
+          {...chart}
+          />
+        </div>
       <div className="service">
-  <h1>Revenue gained vs lost</h1>
-  {gainedRevenue.map((gained, index) => {
-    const lost = lostRevenue.find(
-      (l) => l.treatment === gained.treatment && l.duration === gained.duration
-    );
-    const total = Number(gained.sum) + Number(lost?.sum ?? 0);
-    const gainedPercent = (Number(gained.sum) / total) * 100;
-    console.log(gainedRevenue)
-    return (
-      <div className="top-services" key={`${gained.treatment}-${gained.duration}-${index}`}>
-        <p className="service-info">{gained.treatment} {gained.duration} min</p>
-        <div className="gained-lost-cols">
-          <p style={{ color: '#3D1F4E', fontWeight: 500, minWidth: '100px', marginRight: '200px' }}>${Number(gained.sum).toLocaleString()}</p>
-          <p style={{ color: '#D4537E', fontWeight: 500, minWidth: '100px', textAlign: 'right', marginRight: '20px'}}>${Number(lost?.sum ?? 0).toLocaleString()}</p>  
-        </div>
-        <div style={{ display: 'flex', height: '4px', borderRadius: '2px', overflow: 'hidden', margin: '6px' }}>
-          <div style={{ width: `${gainedPercent}%`, background: '#3D1F4E' }} />
-          <div style={{ width: `${100 - gainedPercent}%`, background: '#D4537E' }} />
-        </div>
-      </div>
+        <h1>Revenue gained vs lost</h1>
+        {gainedRevenue.map((gained, index) => {
+          const lost = lostRevenue.find(
+            (l) => l.treatment === gained.treatment && l.duration === gained.duration
           );
-        })}
+          const total = Number(gained.sum) + Number(lost?.sum ?? 0);
+          const gainedPercent = (Number(gained.sum) / total) * 100;
+          console.log(gainedRevenue)
+          return (
+            <div className="top-services" key={`${gained.treatment}-${gained.duration}-${index}`}>
+              <p className="service-info">{gained.treatment} {gained.duration} min</p>
+              <div className="gained-lost-cols">
+                <p style={{ color: '#3D1F4E', fontWeight: 500, minWidth: '100px', marginRight: '200px' }}>${Number(gained.sum).toLocaleString()}</p>
+                <p style={{ color: '#D4537E', fontWeight: 500, minWidth: '100px', textAlign: 'right', marginRight: '20px'}}>${Number(lost?.sum ?? 0).toLocaleString()}</p>  
+              </div>
+              <div style={{ display: 'flex', height: '4px', borderRadius: '2px', overflow: 'hidden', margin: '6px' }}>
+                <div style={{ width: `${gainedPercent}%`, background: '#3D1F4E' }} />
+                <div style={{ width: `${100 - gainedPercent}%`, background: '#D4537E' }} />
+              </div>
+            </div>
+                );
+              })}
+            </div>
       </div>
+      
     </div>
-  </div>
   )
 }
 

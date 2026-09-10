@@ -346,7 +346,7 @@ const DashBoard = () => {
             </div>
           
           </div>
-          <Button onClick={addClient} color="secondary" sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
+          <Button onClick={addClient} color="secondary" sx={{ margin: '50px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
       </div>
       <div className="service">
         <h1>Payment</h1>
@@ -413,7 +413,7 @@ const DashBoard = () => {
               </LocalizationProvider>
             </div>
           </div>
-          <Button color="secondary" onClick={bookAppointment} sx={{ margin: '10px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Book Appointment</Button>
+          <Button color="secondary" onClick={bookAppointment} sx={{ margin: '30px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Book Appointment</Button>
       </div>
       
     </div>
