@@ -45,6 +45,7 @@ type TodaysClients = {
   treatment: string,
   duration: string,
   appointment_date: string,
+  price: string,
   status: string
 }
 
@@ -72,6 +73,7 @@ const DashBoard = () => {
   const [service, setService] = useState<Services[]>([]);
   const [selectedService, setSelectedService] = useState<Services | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<TodaysClients | null>(null);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
@@ -79,6 +81,7 @@ const DashBoard = () => {
   const [lastName, setLastName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [note, setNote] = useState<string>("");
+  const [tip, setTip] = useState(0);
 
   const todaysDate = new Date().toLocaleDateString();
 
@@ -203,7 +206,15 @@ const DashBoard = () => {
 
   const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNote(e.target.value)
-  } 
+  }
+
+  const handleSelectedAppointment = (appointment: TodaysClients) => {
+    setSelectedAppointment(appointment);
+  }
+
+  const handleTipChange = (e: React.ChangeEvent<HTMLInput | HTMLInputElement>) => {
+    setTip(Number(e.target.value));
+  }
 
 
   return(
@@ -268,7 +279,7 @@ const DashBoard = () => {
             
           ):(
           todayAppointments.map((appointment) => (
-            <div key={appointment.id} className="schedule-row">
+            <div key={appointment.id} className="schedule-row" onClick={() => handleSelectedAppointment(appointment)}>
               <div className="schedule-info">
                 <span className="schedule-name">{appointment.first_name}</span>
                 <span className="schedule-service">{appointment.treatment} - {appointment.duration} min</span>
@@ -336,21 +347,54 @@ const DashBoard = () => {
               />
             </div>
             <FormControlLabel control={<Checkbox  defaultChecked/>} label="Active"/>
-            <div className="client-notes">
-              <TextareaAutosize
-                aria-label="empty textarea"
-                placeholder="Client notes"
-                onChange={handleNoteChange}
-                style={{ width: 200 }}
-            />
+              <div className="client-notes">
+                <TextareaAutosize
+                  aria-label="empty textarea"
+                  placeholder="Client notes"
+                  onChange={handleNoteChange}
+                  style={{ width: 200 }}
+              />
+              </div>
+            
             </div>
-          
-          </div>
           <Button onClick={addClient} color="secondary" sx={{ margin: '50px', padding: '10px', gap:'10px'}} variant="contained" endIcon={<ThumbUpAltIcon />}>Add client</Button>
       </div>
       <div className="service">
-        <h1>Payment</h1>
-        <p>Stripe integration coming soon!</p>
+        <h1>Checkout</h1>
+        {selectedAppointment ? (
+          <div className="checkout-details">
+            <div className="checkout-row">
+              <span className="checkout-label">Client</span>
+              <span>{selectedAppointment.first_name}</span>
+            </div>
+            <div className="checkout-row">
+              <span className="checkout-label">Treatment</span>
+              <span>{selectedAppointment.treatment} - {selectedAppointment.duration}</span>
+            </div>
+            <div className="checkout-row">
+              <span className="checkout-label">Price</span>
+              <span>${selectedAppointment.price}</span>
+            </div>
+            <div className="checkout-row">
+              <span className="checkout-label">
+                <input 
+                  className="tip-amount"
+                  type="number" 
+                  placeholder="0"
+                  value={tip}
+                  onChange={handleTipChange}
+                />
+              </span>
+            </div>
+            <div className="checkout-total">
+              <span>Total</span>
+              <span>${Number(selectedAppointment.price) + tip}</span>
+            </div>
+            <button className="checkout-btn">Checkout</button>
+          </div>
+        ) : (
+          <p>Select an appointment from today's schedule</p>
+        )}
       </div>
       <div className="service">
         <h1>Book Appointment</h1>
@@ -371,24 +415,24 @@ const DashBoard = () => {
           </label>
           <Box 
             component="form"
-            sx={{ minWidth: 120, margin: '15px'}}
+            sx={{ minWidth: 120, margin: '12px'}}
             noValidate
             autoComplete="off"  
             >
             <FormControl fullWidth>
-            <InputLabel id="Treatment">Treatment</InputLabel>
-            <Select<string>
-              id="treatment"
-              onChange={handleTreatmentChange} 
-              value={selectedService?.id ?? ""}
-              label="Treatment"
-            >
-              {service?.map((s) => (
-                <MenuItem key={s.id} value={s.id}>
-                  {s.treatment} {s.duration} min
-                </MenuItem>
-              ))}
-            </Select> 
+              <InputLabel id="Treatment">Treatment</InputLabel>
+              <Select<string>
+                id="treatment"
+                onChange={handleTreatmentChange} 
+                value={selectedService?.id ?? ""}
+                label="Treatment"
+              >
+                {service?.map((s) => (
+                  <MenuItem key={s.id} value={s.id}>
+                    {s.treatment} {s.duration} min
+                  </MenuItem>
+                ))}
+              </Select> 
             </FormControl>
           </Box>
           <div className="date-time">

@@ -105,6 +105,7 @@ analyticsRouter.get('/appointments_today', async(req:Request, res:Response) => {
       s.treatment,
       s.duration,
       a.appointment_date,
+      s.price,
       a.status
     from appointment a
     join client c on a.client_id = c.id

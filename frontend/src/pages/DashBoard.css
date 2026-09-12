@@ -180,6 +180,7 @@
   font-weight: bold;
   color: #2A1535;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .schedule-service {
@@ -210,4 +211,61 @@
 
 .sleeping-sloth{
   width: 300px;
+}
+
+.payment{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkout-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.checkout-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #2A1535;
+  border-bottom: 0.5px solid #E8D5E8;
+  padding-bottom: 8px;
+}
+
+.checkout-label {
+  color: #7A6080;
+}
+
+.checkout-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3D1F4E;
+  margin-top: 8px;
+}
+
+.tip-input {
+  width: 80px;
+  border: 0.5px solid #C07AAB;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #2A1535;
+}
+
+.checkout-btn {
+  width: 50%;
+  background: #3D1F4E;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
 }
