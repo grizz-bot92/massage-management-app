@@ -246,6 +246,11 @@
   font-weight: 600;
   color: #3D1F4E;
   margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.tip-amount{
+  margin-left:  20px;
 }
 
 .tip-input {
@@ -258,7 +263,7 @@
 }
 
 .checkout-btn {
-  width: 50%;
+  width: 25%;
   background: #3D1F4E;
   color: #fff;
   border: none;
@@ -267,5 +272,11 @@
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 12px;
+  margin-top: 15px;
+  box-sizing: border-box;
+}
+
+.btn-container{
+  display: flex;
+  justify-content: center;
 }

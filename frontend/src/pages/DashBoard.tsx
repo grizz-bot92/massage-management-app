@@ -22,6 +22,10 @@ import MenuItem from '@mui/material/MenuItem';
 import PhoneInput from 'react-phone-number-input/input';
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.jpg';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from "@stripe/stripe-js";
+import CheckoutForm from './CheckoutForm';
+
 
 type MonthlyData = {
   month: string,
@@ -64,6 +68,8 @@ type Services = {
   duration: string
 }
 
+const todaysDate = new Date().toLocaleDateString();
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string);
 
 const DashBoard = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
@@ -82,8 +88,10 @@ const DashBoard = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [tip, setTip] = useState(0);
+  const [clientSecret, setClientSecret] = useState("");
+  
 
-  const todaysDate = new Date().toLocaleDateString();
+  const totalInCents = (Number(selectedAppointment?.price ?? 0) + tip) * 100;
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/clients`)
@@ -169,11 +177,10 @@ const DashBoard = () => {
 
   const updateStatus = async(id: string, newStatus: string) => {
     try{
-      const result = await axios.patch(`${import.meta.env.VITE_API_URL}/appointments/status`, {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/appointments/status`, {
         id: id,  
         status: newStatus
       });
-      console.log(result)
     }catch(e){
       console.error(e)
     }
@@ -186,9 +193,18 @@ const DashBoard = () => {
     .then(data => setTodaysAppointments(data));
   };
 
+
   const handleTreatmentChange = (e: SelectChangeEvent<string>) => {
     const selected = service.find(s => s.id === e.target.value);
     setSelectedService(selected || null);
+  }
+
+  const handleCheckout = async() => {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/stripe/create_payment`, {
+        amount: totalInCents
+      });
+      console.log('payment data', data);
+      setClientSecret(data.clientSecret)
   }
 
 
@@ -212,7 +228,7 @@ const DashBoard = () => {
     setSelectedAppointment(appointment);
   }
 
-  const handleTipChange = (e: React.ChangeEvent<HTMLInput | HTMLInputElement>) => {
+  const handleTipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTip(Number(e.target.value));
   }
 
@@ -376,7 +392,7 @@ const DashBoard = () => {
               <span>${selectedAppointment.price}</span>
             </div>
             <div className="checkout-row">
-              <span className="checkout-label">
+              <span className="checkout-label">Tip
                 <input 
                   className="tip-amount"
                   type="number" 
@@ -390,7 +406,15 @@ const DashBoard = () => {
               <span>Total</span>
               <span>${Number(selectedAppointment.price) + tip}</span>
             </div>
-            <button className="checkout-btn">Checkout</button>
+            {clientSecret ? (
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm clientSecret={clientSecret} />
+              </Elements>
+            ): (
+              <div className="btn-container">
+                <button className="checkout-btn" onClick={handleCheckout}>Checkout</button> 
+              </div>    
+            )}
           </div>
         ) : (
           <p>Select an appointment from today's schedule</p>

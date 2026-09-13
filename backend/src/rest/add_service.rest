@@ -1,1 +1,6 @@
-GET http://localhost:8080/analytics/appointments_today
+POST http://localhost:8080/stripe/create_payment
+Content-Type: application/json
+
+{
+  "amount": 14500
+}

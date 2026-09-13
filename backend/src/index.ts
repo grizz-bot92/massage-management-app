@@ -9,6 +9,7 @@ import staffRouter from './routes/staff';
 import analyticsRouter from './routes/analytics';
 import { errorHandler } from './middleware/errorHandler';
 import loginRouter from './routes/login';
+import paymentRouter from './routes/stripe';
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.use('/appointments', appointmentRouter);
 app.use('/services', serviceRouter);
 app.use('/staff', staffRouter);
 app.use('/analytics', analyticsRouter)
-app.use('/login', loginRouter)
+app.use('/login', loginRouter);
+app.use('/stripe', paymentRouter);
 app.use(errorHandler);
 
 const server  = createServer(app);
