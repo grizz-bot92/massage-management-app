@@ -6,7 +6,7 @@ import authenticate from '../middleware/auth';
 
 const clientRouter: Router = express.Router();
 
-clientRouter.get('/', async (req:Request, res:Response) => {
+clientRouter.get('/', authenticate, async (req:Request, res:Response) => {
   const clients = await db.select().from(clientSchema);
   res.json(clients)
 })

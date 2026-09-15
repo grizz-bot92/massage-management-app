@@ -33,6 +33,12 @@ app.get('/', (req: Request, res:Response) => {
   res.json('massage management app');
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-})
+export default app;
+
+
+if(process.env.NODE_ENV !== 'test'){
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+

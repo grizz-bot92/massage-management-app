@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node"],
+    "types": ["node", "jest"],
     "target": "esnext",
     "module": "nodenext",
     "rootDir": "./src",
@@ -8,7 +8,8 @@
     "strict": true,
     "moduleResolution": "nodenext",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "isolatedModules": true,
   },
   "include": ["./src/**/*.ts", "drizzle.config.ts"],
   "exclude": ["node_modules", "drizzle.config.ts"]

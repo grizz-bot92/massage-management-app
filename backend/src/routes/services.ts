@@ -18,7 +18,7 @@ serviceRouter.get('/:id', async(req:Request, res:Response) => {
   res.json(service);
 })
 
-serviceRouter.post('/',  async(req:Request, res:Response) => {
+serviceRouter.post('/', authenticate, async(req:Request, res:Response) => {
   const { treatment, price, duration } = req.body;
   const service  = await db.insert(serviceSchema).values([{ treatment, duration, price }]).returning();
   res.json(service);
