@@ -17,7 +17,7 @@ staffRouter.get('/:id', async(req:Request, res:Response) => {
   res.json(staff);
 });
 
-staffRouter.post('/',  async(req:Request, res:Response) => {
+staffRouter.post('/', authenticate, async(req:Request, res:Response) => {
   const { first_name, last_name } = req.body;
   const staff = await db.insert(staffSchema).values([{ first_name, last_name }]).returning();
   res.json(staff);

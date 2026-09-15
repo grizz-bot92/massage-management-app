@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../index';
+import { response } from 'express';
 
 describe('POST /login', () => {
   it('returns 401 with invalid credentials', async() => {
@@ -10,6 +11,7 @@ describe('POST /login', () => {
     expect(response.status).toBe(401);
   });
 });
+
 
 describe('POST /clients', () => {
   it('returns 401 with no auth provided', async() => {
@@ -74,3 +76,27 @@ describe('POST /services', () => {
     });
 
 });
+
+
+describe('POST /staff', () => {
+  it('returns 401 with no auth provided', async() => {
+    const response = await request(app)
+      .post('/staff')
+      .send({ first_name: 'Brandon', last_name: 'Benoit' })
+    expect(response.status).toBe(401);
+  });
+  
+  it('returns 200 with auth provided', async() => {
+    const loginResponse = await request(app)
+      .post('/login')
+      .send({ username: 'Brandon', password: process.env.TEST_PASSWORD })
+    
+    const token = loginResponse.body.token;
+
+    const response = await request(app)
+      .post('/staff')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ first_name: 'Brandon', last_name: 'Benoit' })
+    expect(response.status).toBe(200)
+  });
+})
